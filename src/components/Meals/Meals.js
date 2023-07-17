@@ -1,13 +1,14 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import MealsSummary from './MealsSummary/MealsSummary';
 import AvailableMeals from './AvailableMeals/AvailableMeals';
+import Cart from '../Cart/Cart';
 
 const Meals = () => {
     return(
-        <Fragment>
+        <Cart>
             <MealsSummary/>
             <AvailableMeals/>
-        </Fragment>
+        </Cart>
     )
 }
 export default Meals;
