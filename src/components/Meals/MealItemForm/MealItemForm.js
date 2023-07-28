@@ -1,39 +1,48 @@
-import React, {useRef, useState} from 'react';
+import { useRef, useState } from 'react';
+
 import Input from '../../UI/Input/Input';
 import classes from './MealItemForm.module.css';
 
 const MealItemForm = (props) => {
-    const[enteredInputAmountValid, setEnteredInputAmountValid] = useState(true);
+  const [amountIsValid, setAmountIsValid] = useState(true);
+  const amountInputRef = useRef();
 
-    const amountInputRef = useRef(); 
+  const submitHandler = (event) => {
+    event.preventDefault();
 
-    const SubmitHandler = (event) => {
-        event.preventDefault();
+    const enteredAmount = amountInputRef.current.value;
+    const enteredAmountNumber = +enteredAmount;
 
-        const enteredInputValue = amountInputRef.current.value;
-        const numberEnteredInputValue = +enteredInputValue;
-
-        if(enteredInputValue < 1 || enteredInputValue.trim().length  === 0 || enteredInputValue > 5){
-            setEnteredInputAmountValid(false);
-            return;
-        }
-        
-        props.onAddToCart(numberEnteredInputValue);
-
+    if (
+      enteredAmount.trim().length === 0 ||
+      enteredAmountNumber < 1 ||
+      enteredAmountNumber > 5
+    ) {
+      setAmountIsValid(false);
+      return;
     }
-    return(
-        <form className={classes.form} onSubmit={SubmitHandler}>
-            <Input label="Amount" ref={amountInputRef} input={{
-                id: 'amount_' + props.id,
-                defaultValue: '1',
-                type: 'number',
-                min: '1',
-                max: '5',
-                step: '1'
-            }}/>
-            {!enteredInputAmountValid && <p>Please enter a value from (1-5)</p>}
-            <button type="button" >+ Add</button>
-        </form>
-    )
-}
+
+    props.onAddToCart(enteredAmountNumber);
+  };
+
+  return (
+    <form className={classes.form} onSubmit={submitHandler}>
+      <Input
+        ref={amountInputRef}
+        label='Amount'
+        input={{
+          id: 'amount',
+          type: 'number',
+          min: '1',
+          max: '5',
+          step: '1',
+          defaultValue: '1',
+        }}
+      />
+      <button>+ Add</button>
+      {!amountIsValid && <p>Please enter a valid amount (1-5).</p>}
+    </form>
+  );
+};
+
 export default MealItemForm;
